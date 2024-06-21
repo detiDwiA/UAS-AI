@@ -194,3 +194,15 @@ test_data_accuracy = accuracy_score(X_test_prediction, Y_test)
 
 print('Accuracy score on Test Data : ', test_data_accuracy)
 
+
+# Contoh data transaksi baru (fitur harus dalam format yang sama dengan data pelatihan)
+new_transaction = np.array([[...]])  # Masukkan nilai fitur transaksi baru di sini
+
+# Melakukan prediksi
+prediction = model.predict(new_transaction)
+if prediction == 0:
+    print("Transaksi ini sah.")
+else:
+    print("Transaksi ini penipuan.")
+
+
