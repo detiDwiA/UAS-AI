@@ -50,7 +50,7 @@ if 'Class' in credit_card_data.columns:
     # compare the values for both transactions
     print(credit_card_data.groupby('Class').mean())
 
-    legit_sample = legit.sample(n=492)
+    legit_sample = legit.sample(n=2)
     new_dataset = pd.concat([legit_sample, fraud], axis=0)
 
     print(new_dataset.head())
