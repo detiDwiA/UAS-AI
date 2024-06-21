@@ -157,7 +157,7 @@ print(X.shape, X_train.shape, X_test.shape)
 # In[29]:
 
 
-model = LogisticRegression()
+model = LogisticRegression(max_iter=1000)
 
 
 # In[37]:
