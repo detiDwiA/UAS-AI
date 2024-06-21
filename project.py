@@ -76,20 +76,20 @@ test_data_accuracy = accuracy_score(X_test_prediction, Y_test)
 
 print('Accuracy score on Test Data : ', test_data_accuracy)
 
-# Fungsi untuk memprediksi apakah transaksi baru adalah penipuan atau tidak
-def predict_transaction(model, transaction):
-    prediction = model.predict(transaction)
-    if prediction == 0:
-        print("Transaksi ini sah.")
-    else:
-        print("Transaksi ini penipuan.")
+# # Fungsi untuk memprediksi apakah transaksi baru adalah penipuan atau tidak
+# def predict_transaction(model, transaction):
+#     prediction = model.predict(transaction)
+#     if prediction == 0:
+#         print("Transaksi ini sah.")
+#     else:
+#         print("Transaksi ini penipuan.")
 
-# Contoh data transaksi baru
-# Gantilah nilai-nilai berikut dengan nilai fitur dari transaksi baru yang ingin Anda prediksi
-new_transaction = np.array([[...]])
+# # Contoh data transaksi baru
+# # Gantilah nilai-nilai berikut dengan nilai fitur dari transaksi baru yang ingin Anda prediksi
+# new_transaction = np.array([[...]])
 
-# Pastikan data transaksi baru memiliki bentuk yang sama dengan data pelatihan (misalnya, jumlah fitur yang sama)
-# Jika perlu, gunakan scaler yang sama dengan yang digunakan pada data pelatihan
+# # Pastikan data transaksi baru memiliki bentuk yang sama dengan data pelatihan (misalnya, jumlah fitur yang sama)
+# # Jika perlu, gunakan scaler yang sama dengan yang digunakan pada data pelatihan
 
-# Melakukan prediksi pada transaksi baru
-predict_transaction(model, new_transaction)
+# # Melakukan prediksi pada transaksi baru
+# predict_transaction(model, new_transaction)
