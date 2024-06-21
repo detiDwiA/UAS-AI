@@ -90,7 +90,7 @@ credit_card_data.groupby('Class').mean()
 # In[16]:
 
 
-legit_sample = legit.sample(n=2)
+legit_sample = legit.sample(n=492)
 
 
 # In[17]:
