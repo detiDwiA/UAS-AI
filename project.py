@@ -1,131 +1,102 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
-
 # In[2]:
-
-
 # loading the dataset to a Pandas DataFrame
 credit_card_data = pd.read_csv(r'https://drive.google.com/uc?export=download&id=1ZjXpVKzYU-R5MVjE6_gdt532ur9IJ-9R')
 
+# Membersihkan tanda kutip dari nama kolom (jika ada)
+credit_card_data.columns = credit_card_data.columns.str.replace('"', '')
 
 # In[3]:
-
-
 # first 5 rows of the dataset
-credit_card_data.head()
-
+print(credit_card_data.head())
 
 # In[4]:
-
-
-credit_card_data.tail()
-
+print(credit_card_data.tail())
 
 # In[5]:
-
-
 # dataset informations
-credit_card_data.info()
-
+print(credit_card_data.info())
 
 # In[6]:
-
-
 # checking the number of missing values in each column
-credit_card_data.isnull().sum()
-
+print(credit_card_data.isnull().sum())
 
 # In[7]:
+# Check if 'Class' column exists
+if 'Class' in credit_card_data.columns:
+    # distribution of legit transactions & fraudulent transactions
+    print(credit_card_data['Class'].value_counts())
 
+    # separating the data for analysis
+    legit = credit_card_data[credit_card_data.Class == 0]
+    fraud = credit_card_data[credit_card_data.Class == 1]
 
-# distribution of legit transactions & fraudulent transactions
-credit_card_data['Class'].value_counts()
+    print(legit.shape)
+    print(fraud.shape)
 
+    # statistical measures of the data
+    print(legit.Amount.describe())
+    print(fraud.Amount.describe())
 
-# In[8]:
+    # compare the values for both transactions
+    print(credit_card_data.groupby('Class').mean())
 
+    legit_sample = legit.sample(n=492)
+    new_dataset = pd.concat([legit_sample, fraud], axis=0)
 
-# separating the data for analysis
-legit = credit_card_data[credit_card_data.Class == 0]
-fraud = credit_card_data[credit_card_data.Class == 1]
+    print(new_dataset.head())
+    print(new_dataset.tail())
+    print(new_dataset['Class'].value_counts())
+    print(new_dataset.groupby('Class').mean())
 
+    X = new_dataset.drop(columns='Class', axis=1)
+    Y = new_dataset['Class']
+else:
+    print("Kolom 'Class' tidak ditemukan dalam dataframe.")
+    # Lakukan operasi lain yang tidak memerlukan kolom 'Class'
+    # Contoh: Menampilkan statistik deskriptif dari dataframe
+    print("Statistik deskriptif dari dataframe:")
+    print(credit_card_data.describe())
+    
+    # Untuk demonstrasi, kita lanjutkan dengan operasi lain. Misalnya, kita bisa membagi data menjadi fitur dan label lain jika ada
+    # Dalam hal ini, kita bisa menggunakan kolom lain sebagai target jika ada, atau kita hanya menampilkan data saja.
+    
+    # Jika tidak ada kolom target, kita tidak bisa melanjutkan ke proses pelatihan model
+    X = credit_card_data
+    Y = None  # Tidak ada kolom target yang jelas
 
-# In[9]:
+# Langkah-langkah berikutnya tergantung pada keberadaan 'Class' atau kolom target lain
+if Y is not None:
+    # Membagi data menjadi data latih dan data uji
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, stratify=Y, random_state=2)
 
+    # In[19]:
+    # Logistic Regression Model
+    model = LogisticRegression()
 
-print(legit.shape)
-print(fraud.shape)
+    # training the Logistic Regression Model with Training Data
+    model.fit(X_train, Y_train)
 
+    # In[20]:
+    # accuracy on training data
+    X_train_prediction = model.predict(X_train)
+    training_data_accuracy = accuracy_score(X_train_prediction, Y_train)
 
-# In[10]:
+    print('Akurasi pada data latih : ', training_data_accuracy)
 
+    # In[21]:
+    # accuracy on test data
+    X_test_prediction = model.predict(X_test)
+    test_data_accuracy = accuracy_score(X_test_prediction, Y_test)
 
-# statistical measures of the data
-legit.Amount.describe()
-
-
-# In[11]:
-
-
-fraud.Amount.describe()
-
-
-# In[12]:
-
-
-# compare the values for both transactions
-credit_card_data.groupby('Class').mean()
-
-
-# In[13]:
-
-
-legit_sample = legit.sample(n=492)
-
-
-# In[14]:
-
-
-new_dataset = pd.concat([legit_sample, fraud], axis=0)
-
-
-# In[15]:
-
-
-new_dataset.head()
-
-
-# In[16]:
-
-
-new_dataset.tail()
-
-
-# In[17]:
-
-
-new_dataset['Class'].value_counts()
-
-
-# In[18]:
-
-
-new_dataset.groupby('Class').mean()
-
-
-# In[19]:
-
-
-X = new_dataset.drop(columns='Class', axis=1)
-Y = new_dataset['Class']
-
+    print('Akurasi pada data uji : ', test_data_accuracy)
+else:
+    print("Tidak ada kolom target yang jelas untuk pelatihan model.")
