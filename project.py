@@ -9,7 +9,8 @@ from sklearn.metrics import accuracy_score
 
 # In[2]:
 # loading the dataset to a Pandas DataFrame
-credit_card_data = pd.read_csv(r'https://drive.google.com/uc?export=download&id=1ZjXpVKzYU-R5MVjE6_gdt532ur9IJ-9R')
+credit_card_data = pd.read_csv(r'dataset.csv')
+# credit_card_data = pd.read_csv(r'https://drive.google.com/uc?export=download&id=1ZjXpVKzYU-R5MVjE6_gdt532ur9IJ-9R')
 
 # Membersihkan tanda kutip dari nama kolom (jika ada)
 credit_card_data.columns = credit_card_data.columns.str.replace('"', '')
