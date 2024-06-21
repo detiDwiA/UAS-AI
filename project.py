@@ -1,68 +1,45 @@
-import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
+from imblearn.over_sampling import SMOTE
 
-# Load the dataset
-credit_card_data = pd.read_csv('dataset.csv')
+# Membaca dataset
+credit_card_data = pd.read_csv('clean_dataset.csv')
 
-# Check if the dataset is loaded correctly
-print(credit_card_data.head())
-print(credit_card_data.info())
+# Memeriksa distribusi kelas
+print("Distribusi kelas sebelum SMOTE:")
+print(credit_card_data['Class'].value_counts())
 
-# Check if 'Class' column exists
-if 'Class' in credit_card_data.columns:
-    # Distribution of legit transactions & fraudulent transactions
-    print(credit_card_data['Class'].value_counts())
+# Memisahkan fitur (X) dan target (Y)
+X = credit_card_data.drop(columns='Class', axis=1)
+Y = credit_card_data['Class']
 
-    # Separate the data for analysis
-    legit = credit_card_data[credit_card_data.Class == 0]
-    fraud = credit_card_data[credit_card_data.Class == 1]
+# Menggunakan SMOTE untuk oversampling
+smote = SMOTE(random_state=42)
+X_resampled, Y_resampled = smote.fit_resample(X, Y)
 
-    print(legit.shape)
-    print(fraud.shape)
+# Memeriksa distribusi kelas setelah SMOTE
+print("Distribusi kelas setelah SMOTE:")
+print(Y_resampled.value_counts())
 
-    # Statistical measures of the data
-    print(legit.Amount.describe())
-    print(fraud.Amount.describe())
+# Membagi data menjadi data latih dan data uji dengan stratify setelah resampling
+X_train, X_test, Y_train, Y_test = train_test_split(X_resampled, Y_resampled, test_size=0.2, stratify=Y_resampled, random_state=42)
 
-    # Compare the values for both transactions
-    print(credit_card_data.groupby('Class').mean())
+# Inisialisasi model
+model = LogisticRegression(max_iter=1000)
 
-    # Adjust sample size if necessary
-    sample_size = min(2, len(legit))
+# Melatih model
+model.fit(X_train, Y_train)
 
-    legit_sample = legit.sample(n=sample_size)
-    new_dataset = pd.concat([legit_sample, fraud], axis=0)
+# Melakukan prediksi pada data uji
+Y_pred = model.predict(X_test)
 
-    print(new_dataset['Class'].value_counts())
-    print(new_dataset.groupby('Class').mean())
+# Menghitung akurasi
+accuracy = accuracy_score(Y_test, Y_pred)
+print(f"Akurasi: {accuracy}")
 
-    # Split the data into features and target
-    X = new_dataset.drop(columns='Class', axis=1)
-    Y = new_dataset['Class']
-
-    # Ensure there are no missing values or inconsistent data types
-    X = X.apply(pd.to_numeric, errors='coerce')
-    Y = Y.apply(pd.to_numeric, errors='coerce')
-    X = X.dropna()
-    Y = Y[X.index]
-
-    # Split the data into training and testing sets
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, stratify=Y, random_state=42)
-
-    # Initialize the model
-    model = LogisticRegression()
-
-    # Train the model
-    model.fit(X_train, Y_train)
-
-    # Predict on the test data
-    Y_pred = model.predict(X_test)
-
-    # Calculate accuracy
-    accuracy = accuracy_score(Y_test, Y_pred)
-    print(f'Accuracy: {accuracy}')
-else:
-    print("Kolom 'Class' tidak ditemukan dalam dataset. Pastikan dataset memiliki kolom 'Class'.")
+# Menampilkan beberapa prediksi contoh
+print("Prediksi contoh:")
+for i in range(5):
+    print(f"Prediksi: {Y_pred[i]}, Aktual: {Y_test.values[i]}")
