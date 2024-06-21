@@ -15,7 +15,7 @@ from sklearn.metrics import accuracy_score
 
 
 # loading the dataset to a Pandas DataFrame
-credit_card_data = pd.read_csv(r'E:\SEMESTER 4\KECERDASAN BUATAN\PROJECT UAS_KECERDASAN BUATAN\creditcard.csv')
+credit_card_data = pd.read_csv(r'dataset.csv')
 
 
 # In[6]:
