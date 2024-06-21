@@ -11,6 +11,14 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
 
+# Buat pipeline dengan StandardScaler dan LogisticRegression
+scaler = StandardScaler()
+model = LogisticRegression(max_iter=200)
+pipeline = make_pipeline(scaler, model)
+
+# Latih model
+pipeline.fit(X_train, y_train)
+
 # In[5]:
 
 
