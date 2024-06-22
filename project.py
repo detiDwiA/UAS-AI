@@ -60,9 +60,9 @@ input_data = np.array(input_data).reshape(1, -1)
 if st.button('Predict'):
     prediction = model.predict(input_data)
     if prediction[0] == 0:
-        st.success("The transaction is legitimate.")
+        st.success("Data palsu")
     else:
-        st.error("The transaction is fraudulent.")
+        st.error("Data asli")
 
 # Show the accuracy of the model
 X_train_prediction = model.predict(X_train)
