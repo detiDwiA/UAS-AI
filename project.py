@@ -56,13 +56,16 @@ for column in X.columns:
 # Convert input data to numpy array
 input_data = np.array(input_data).reshape(1, -1)
 
-# Prediction
+# Check for zero values
 if st.button('Prediksi sekarang'):
-    prediction = model.predict(input_data)
-    if prediction[0] == 0:
-        st.success("Kartu Kredit Asli")
+    if np.any(input_data == 0):
+        st.error("Input tidak boleh ada yang bernilai 0")
     else:
-        st.error("Kartu Kredit Palsu")
+        prediction = model.predict(input_data)
+        if prediction[0] == 0:
+            st.success("Kartu Kredit Asli")
+        else:
+            st.error("Kartu Kredit Palsu")
 
 # Show the accuracy of the model
 X_train_prediction = model.predict(X_train)
