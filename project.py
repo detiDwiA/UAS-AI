@@ -60,9 +60,9 @@ input_data = np.array(input_data).reshape(1, -1)
 if st.button('Predict'):
     prediction = model.predict(input_data)
     if prediction[0] == 0:
-        st.success("Data palsu")
+        st.success("Kartu Kredit Asli")
     else:
-        st.error("Data asli")
+        st.error("Kartu Kredit Palsu")
 
 # Show the accuracy of the model
 X_train_prediction = model.predict(X_train)
