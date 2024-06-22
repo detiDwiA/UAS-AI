@@ -32,7 +32,7 @@ legit_sample = legit.sample(n=492)
 new_dataset = pd.concat([legit_sample, fraud], axis=0)
 
 # Splitting the data into features and targets
-X = new_dataset.drop(columns='Class', axis=1)
+X = new_dataset[['Amount']]  # Use only 'Amount' feature
 Y = new_dataset['Class']
 
 # Splitting the data into training and testing sets
@@ -47,19 +47,16 @@ st.title("Pendeteksi kepalsuan kartu kredit")
 
 st.write("Masukan data yang ingin di prediksi.")
 
-# Create input fields for each feature
-input_data = []
-for column in X.columns:
-    value = st.number_input(f"masukkan {column}", format="%.2f")
-    input_data.append(value)
+# Create input field for 'Amount' feature
+amount = st.number_input("masukkan Amount", format="%.2f")
 
 # Convert input data to numpy array
-input_data = np.array(input_data).reshape(1, -1)
+input_data = np.array([amount]).reshape(1, -1)
 
-# Check for zero values
+# Check for near-zero value for 'Amount' (considering values less than 0.01 as zero)
 if st.button('Prediksi sekarang'):
-    if np.any(input_data == 0):
-        st.error("Input tidak boleh ada yang bernilai 0")
+    if np.isclose(amount, 0, atol=0.01):
+        st.error("Amount tidak boleh bernilai mendekati 0 (kurang dari 0.01)")
     else:
         prediction = model.predict(input_data)
         if prediction[0] == 0:
