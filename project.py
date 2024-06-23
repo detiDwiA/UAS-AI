@@ -17,11 +17,11 @@ st.write("5 data teratas")
 st.write(credit_card_data.head())
 
 # Display the number of missing values in each column
-st.write("data yang tidak memiliki value di dalam kolom")
+st.write("Data yang tidak memiliki value di dalam kolom")
 st.write(credit_card_data.isnull().sum())
 
 # Distribution of legit transactions & fraudulent transactions
-st.write("palsu atau asli transaksi")
+st.write("Palsu atau asli transaksi")
 st.write(credit_card_data['Class'].value_counts())
 
 # Data preprocessing
@@ -32,37 +32,43 @@ legit_sample = legit.sample(n=492)
 new_dataset = pd.concat([legit_sample, fraud], axis=0)
 
 # Splitting the data into features and targets
-X = new_dataset[['Amount']]  # Use only 'Amount' feature
+X = new_dataset.drop(columns='Class', axis=1)
 Y = new_dataset['Class']
 
 # Splitting the data into training and testing sets
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, stratify=Y, random_state=2)
 
 # Training the model
-model = LogisticRegression()
+model = LogisticRegression(max_iter=1000)
 model.fit(X_train, Y_train)
 
 # Streamlit UI
-st.title("Pendeteksi kepalsuan kartu kredit")
+st.title("Pendeteksi Kepalsuan Kartu Kredit")
 
-st.write("Masukan data yang ingin di prediksi.")
+st.write("Masukkan data yang ingin diprediksi dalam format: time,v1,v2,...,v28,amount")
 
-# Create input field for 'Amount' feature
-amount = st.number_input("masukkan Amount", format="%.2f")
+# Create input field for user to enter comma-separated values
+user_input = st.text_input("Masukkan data:")
 
-# Convert input data to numpy array
-input_data = np.array([amount]).reshape(1, -1)
+if user_input:
+    # Split the input string by commas
+    input_values = user_input.split(',')
 
-# Check for near-zero value for 'Amount' (considering values less than 0.01 as zero)
-if st.button('Prediksi sekarang'):
-    if np.isclose(amount, 0, atol=0.01):
-        st.error("Amount tidak boleh bernilai mendekati 0 (kurang dari 0.01)")
+    # Ensure there are exactly 30 input values
+    if len(input_values) != 30:
+        st.error("Masukkan harus terdiri dari 30 nilai yang dipisahkan dengan koma.")
     else:
-        prediction = model.predict(input_data)
-        if prediction[0] == 0:
-            st.success("Kartu Kredit Asli")
-        else:
-            st.error("Kartu Kredit Palsu")
+        # Convert input values to numpy array
+        try:
+            input_data = np.array(input_values, dtype=float).reshape(1, -1)
+            prediction = model.predict(input_data)
+
+            if prediction[0] == 0:
+                st.success("Kartu Kredit Asli")
+            else:
+                st.error("Kartu Kredit Palsu")
+        except ValueError:
+            st.error("Pastikan semua nilai input adalah angka yang valid.")
 
 # Show the accuracy of the model
 X_train_prediction = model.predict(X_train)
@@ -70,5 +76,5 @@ training_data_accuracy = accuracy_score(X_train_prediction, Y_train)
 X_test_prediction = model.predict(X_test)
 test_data_accuracy = accuracy_score(X_test_prediction, Y_test)
 
-st.write(f"tingkat akurasi data latih: {training_data_accuracy * 100:.2f}%")
-st.write(f"tingkat akurasi test data: {test_data_accuracy * 100:.2f}%")
+st.write(f"Tingkat akurasi data latih: {training_data_accuracy * 100:.2f}%")
+st.write(f"Tingkat akurasi test data: {test_data_accuracy * 100:.2f}%")
