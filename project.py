@@ -46,29 +46,32 @@ model.fit(X_train, Y_train)
 st.title("Pendeteksi Kepalsuan Kartu Kredit")
 
 st.write("Masukkan data yang ingin diprediksi dalam format: time,v1,v2,...,v28,amount")
+st.write("Contoh input: 0,-1.359807,-0.072781,2.536346,1.378155,-0.338321,0.462388,0.239599,0.098698,0.363787,0.090794,-0.5516,-0.6178,0.991389,-0.311169,1.468177,-0.4704,0.207971,0.025791,0.403993,0.251412,-0.018307,0.277838,-0.110473,0.066928,0.128539,-0.189115,0.133558,-0.021053,149.62")
 
 # Create input field for user to enter comma-separated values
 user_input = st.text_input("Masukkan data:")
 
-if user_input:
-    # Split the input string by commas
-    input_values = user_input.split(',')
+# Create Enter button
+if st.button('Enter'):
+    if user_input:
+        # Split the input string by commas
+        input_values = user_input.split(',')
 
-    # Ensure there are exactly 30 input values
-    if len(input_values) != 30:
-        st.error("Masukkan harus terdiri dari 30 nilai yang dipisahkan dengan koma.")
-    else:
-        # Convert input values to numpy array
-        try:
-            input_data = np.array(input_values, dtype=float).reshape(1, -1)
-            prediction = model.predict(input_data)
+        # Ensure there are exactly 30 input values
+        if len(input_values) != 30:
+            st.error("Masukkan harus terdiri dari 30 nilai yang dipisahkan dengan koma.")
+        else:
+            # Convert input values to numpy array
+            try:
+                input_data = np.array(input_values, dtype=float).reshape(1, -1)
+                prediction = model.predict(input_data)
 
-            if prediction[0] == 0:
-                st.success("Kartu Kredit Asli")
-            else:
-                st.error("Kartu Kredit Palsu")
-        except ValueError:
-            st.error("Pastikan semua nilai input adalah angka yang valid.")
+                if prediction[0] == 0:
+                    st.success("Kartu Kredit Asli")
+                else:
+                    st.error("Kartu Kredit Palsu")
+            except ValueError:
+                st.error("Pastikan semua nilai input adalah angka yang valid.")
 
 # Show the accuracy of the model
 X_train_prediction = model.predict(X_train)
