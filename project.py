@@ -42,7 +42,7 @@ else:
     st.write(new_dataset['Class'].value_counts())
 
     # Splitting the data into features and targets
-    X = new_dataset.drop(columns='Dataset', axis=1)
+    X = new_dataset.drop(columns='Class', axis=1)
     Y = new_dataset['Class']
 
     # Splitting the data into training and testing sets
