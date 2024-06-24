@@ -39,7 +39,7 @@ else:
 
     # Display the number of samples in each class in the new dataset
     st.write("Jumlah data yang memiliki class 1 dan 0")
-    st.write(new_dataset['Class'].value_counts())
+    st.write(new_dataset['Dataset'].value_counts())
 
     # Splitting the data into features and targets
     X = new_dataset.drop(columns='Class', axis=1)
