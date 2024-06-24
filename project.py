@@ -20,9 +20,7 @@ st.write(credit_card_data.head())
 st.write("Data yang tidak memiliki value di dalam kolom")
 st.write(credit_card_data.isnull().sum())
 
-# Distribution of legit transactions & fraudulent transactions
-st.write("Distribusi Kelas Transaksi")
-st.write(credit_card_data['Class'].value_counts())
+
 
 # Data preprocessing
 legit = credit_card_data[credit_card_data.Class == 0]
@@ -40,11 +38,11 @@ else:
     new_dataset = new_dataset.sample(frac=1, random_state=42).reset_index(drop=True)
 
     # Display the number of samples in each class in the new dataset
-    st.write("Distribusi Kelas Setelah Sampling")
+    st.write("Jumlah data yang memiliki class 1 dan 0")
     st.write(new_dataset['Class'].value_counts())
 
     # Splitting the data into features and targets
-    X = new_dataset.drop(columns='Class', axis=1)
+    X = new_dataset.drop(columns='Dataset', axis=1)
     Y = new_dataset['Class']
 
     # Splitting the data into training and testing sets
